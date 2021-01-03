@@ -14,16 +14,16 @@ public class SimpleMonitors {
 					while (message == null)
 						try {
 							monitor.wait();
-						} catch (InterruptedException e) {
+						} catch(InterruptedException e) {
 						}
 				}
 				System.out.println("Got: " + message);
 			}
 		});
 		t.start();
-		synchronized(monitor) {
-			monitor.notify();
+		synchronized (monitor) {
 			message = "Hi man";
+			monitor.notify();
 		}
 	}
 

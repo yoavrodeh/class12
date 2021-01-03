@@ -80,8 +80,7 @@ To complete a `monitor.wait()`, a thread:
 + Has to be woken up as explained,
 + Then it has to acquire the lock of `monitor`, just like it enters a `synchronized(monitor)` block
   + After all, the wait is inside such a block.
-
-If another thread sends an `interrupt` to the waiting `thread`, `wait` will throw an `InterruptedException`, just like `Thread.sleep`.
++ If another thread sends an `interrupt` to the waiting `thread`, `wait` will throw an `InterruptedException`, just like `Thread.sleep`.
 
 @css[fragment](*To conclude, let's see a possible run of the previous example.*)
 
@@ -93,9 +92,9 @@ If another thread sends an `interrupt` to the waiting `thread`, `wait` will thro
 @[12-14](The secondary thread takes the `monitor` lock and checks the condition)
 @[23-24](The main thread cannot enter the synchronized block.)
 @[12-16](The secondary thread calls `wait` and releases the `monitor`.)
-@[23-25](The main thread acquires the `monitor` lock and calls `notify` on it.)
+@[23-26](The main thread acquires the `monitor` lock, sets the message and calls `notify` on the monitor.)
 @[12-16](The secondary thread wakes up, but now waits for the `monitor` lock so it can reenter the synchronized block.)
-@[23-27](The main thread sets the message, leaves the block, and so releases `monitor`.)
+@[23-27](The main leaves the block, and so releases `monitor`.)
 @[12-21](The secondary thread gets the lock, and so `wait` completes and the thread continues. It then prints the message.)
 
 
@@ -272,7 +271,7 @@ This is actually simpler than `BusyMyLock2`, because `wait` automatically releas
 ---
 ### Problems:
 1. One thread may lock `MyLock` and a different one unlocks it. 
-1. It is not *reentrant*: if a thread aquires the lock, and tries to do it again, it locks it self.
+1. It is not *reentrant*: if a thread aquires the lock, and tries to do it again, it locks itself.
 
 In other words, we want a thread that calls `lock` to **own** the lock.
 
@@ -296,7 +295,7 @@ Java really has an interface `Lock` with implementation `ReentrantLock` which is
 
 A class that supports giving turns to threads. It has methods:
 1. `add()` which adds the current thread to the game.
-1. `waitForTurn()` which makes the calling thread block until it is its turn.
+1. `waitForTurn()` which makes the calling thread block (wait) until it is its turn.
 1. `done()` which is called by a thread when it finishes what it had to do in its turn.
 
 
@@ -322,7 +321,7 @@ A class that supports giving turns to threads. It has methods:
 ---
 ## Further
 
-In these two classes we have only scratched the surface of Java's support for concurrency.
+In these classes we have only scratched the surface of Java's support for concurrency.
 
 There are many more things to know, and here is a very brief overview.
 
